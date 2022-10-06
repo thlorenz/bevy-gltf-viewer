@@ -11,10 +11,13 @@ use bevy_editor_pls::{
 };
 
 #[derive(Component)]
-struct GltfContainer;
+struct GltfContainer {
+    rotate: bool,
+}
 
 #[bevy_main]
 fn main() {
+    info!("Toggle rotation with R");
     let scale = 3.0;
     let mut app = App::new();
     app.insert_resource(Msaa { samples: 4 })
@@ -35,7 +38,8 @@ fn main() {
         // Actual Scene
         .add_startup_system(setup_world)
         .add_startup_system(setup_pbr)
-        .add_system(rotate_pbr);
+        .add_system(rotate_pbr)
+        .add_system(toggle_rotate);
     app.run();
 }
 
@@ -63,13 +67,26 @@ fn setup_pbr(mut commands: Commands, asset_server: Res<AssetServer>) {
                 })
                 .insert(Name::new("Gltf"));
         })
-        .insert(GltfContainer);
+        .insert(GltfContainer { rotate: true });
 }
 
-fn rotate_pbr(time: Res<Time>, mut query: Query<&mut Transform, With<GltfContainer>>) {
-    let dt = time.delta_seconds();
-    if let Ok(mut transform) = query.get_single_mut() {
-        transform.rotate_y(dt * FRAC_PI_6);
+fn rotate_pbr(
+    time: Res<Time>,
+    mut query: Query<(&mut Transform, &GltfContainer), With<GltfContainer>>,
+) {
+    if let Ok((mut transform, GltfContainer { rotate })) = query.get_single_mut() {
+        if *rotate {
+            let dt = time.delta_seconds();
+            transform.rotate_y(dt * FRAC_PI_6);
+        }
+    }
+}
+
+fn toggle_rotate(keyboard_input: Res<Input<KeyCode>>, mut query: Query<&mut GltfContainer>) {
+    if keyboard_input.just_pressed(KeyCode::R) {
+        if let Ok(mut container) = query.get_single_mut() {
+            container.rotate = !container.rotate;
+        }
     }
 }
 
