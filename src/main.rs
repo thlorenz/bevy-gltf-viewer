@@ -10,6 +10,8 @@ use bevy_editor_pls::{
     prelude::EditorPlugin,
 };
 
+const FLIGHT_HELMET: &str = "models/FlightHelmet/FlightHelmet.gltf#Scene0";
+
 #[derive(Component)]
 struct GltfContainer {
     rotate: bool,
@@ -47,8 +49,13 @@ fn setup_pbr(mut commands: Commands, asset_server: Res<AssetServer>) {
     let pos = Vec3::new(0.0, 0.0, 0.0);
     let scene_path = std::env::args()
         .nth(1)
-        .unwrap_or_else(|| "models/FlightHelmet/FlightHelmet.gltf#Scene0".to_string());
+        .unwrap_or_else(|| FLIGHT_HELMET.to_string());
 
+    let scale = if scene_path == FLIGHT_HELMET {
+        4.5
+    } else {
+        1.0
+    };
     info!("Loading scene from {:#?}", scene_path);
 
     commands
@@ -60,6 +67,7 @@ fn setup_pbr(mut commands: Commands, asset_server: Res<AssetServer>) {
                     transform: {
                         Transform {
                             translation: pos,
+                            scale: Vec3::new(scale, scale, scale),
                             ..Default::default()
                         }
                     },
@@ -97,7 +105,7 @@ fn setup_world(
 ) {
     // camera
     commands.spawn_bundle(Camera3dBundle {
-        transform: Transform::from_xyz(0.0, 4.0, -8.0).looking_at(Vec3::ZERO, Vec3::Y),
+        transform: Transform::from_xyz(0.0, 5.0, -8.0).looking_at(Vec3::ZERO, Vec3::Y),
         ..default()
     });
 
