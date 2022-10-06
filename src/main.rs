@@ -41,12 +41,18 @@ fn main() {
 
 fn setup_pbr(mut commands: Commands, asset_server: Res<AssetServer>) {
     let pos = Vec3::new(0.0, 0.0, 0.0);
+    let scene_path = std::env::args()
+        .nth(1)
+        .unwrap_or_else(|| "models/FlightHelmet/FlightHelmet.gltf#Scene0".to_string());
+
+    info!("Loading scene from {:#?}", scene_path);
+
     commands
         .spawn_bundle(SpatialBundle::default())
         .with_children(|parent| {
             parent
                 .spawn_bundle(SceneBundle {
-                    scene: asset_server.load("models/FlightHelmet/FlightHelmet.gltf#Scene0"),
+                    scene: asset_server.load(&scene_path),
                     transform: {
                         Transform {
                             translation: pos,
