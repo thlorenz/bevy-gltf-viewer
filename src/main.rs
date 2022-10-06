@@ -1,4 +1,4 @@
-use std::f32::consts::FRAC_PI_6;
+use std::f32::consts::FRAC_PI_8;
 
 use bevy::{
     diagnostic::{EntityCountDiagnosticsPlugin, FrameTimeDiagnosticsPlugin},
@@ -18,7 +18,7 @@ struct GltfContainer {
 #[bevy_main]
 fn main() {
     info!("Toggle rotation with R");
-    let scale = 3.0;
+    let scale = 2.0;
     let mut app = App::new();
     app.insert_resource(Msaa { samples: 4 })
         .insert_resource(WindowDescriptor {
@@ -77,7 +77,7 @@ fn rotate_pbr(
     if let Ok((mut transform, GltfContainer { rotate })) = query.get_single_mut() {
         if *rotate {
             let dt = time.delta_seconds();
-            transform.rotate_y(dt * FRAC_PI_6);
+            transform.rotate_y(dt * FRAC_PI_8);
         }
     }
 }
@@ -97,13 +97,13 @@ fn setup_world(
 ) {
     // camera
     commands.spawn_bundle(Camera3dBundle {
-        transform: Transform::from_xyz(1.0, 1.5, -1.5).looking_at(Vec3::ZERO, Vec3::Y),
+        transform: Transform::from_xyz(0.0, 4.0, -8.0).looking_at(Vec3::ZERO, Vec3::Y),
         ..default()
     });
 
     // plane
     commands.spawn_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Plane { size: 1.0 })),
+        mesh: meshes.add(Mesh::from(shape::Plane { size: 8.0 })),
         material: materials.add(StandardMaterial {
             base_color: Color::rgb(0.2, 0.2, 0.2),
             perceptual_roughness: 0.8,
