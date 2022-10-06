@@ -19,6 +19,7 @@ struct GltfContainer {
 
 #[bevy_main]
 fn main() {
+    info!("Toggle the Editor with ESC");
     info!("Toggle rotation with R");
     let scale = 2.0;
     let mut app = App::new();

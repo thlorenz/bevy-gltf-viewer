@@ -26,6 +26,9 @@ To load another Gltf scene provide the full path to it instead, i.e.:
 cargo run /Volumes/path/to/my/awesome-assets/scene.gltf#Scene0
 ```
 
+- Toggle the Editor with `ESC`
+- Toggle rotation with `R`
+
 ## Alternatives
 
 For a full-fledged scene viewer try the [bevy scene
