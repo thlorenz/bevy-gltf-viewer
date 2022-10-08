@@ -48,9 +48,17 @@ fn main() {
 
 fn setup_pbr(mut commands: Commands, asset_server: Res<AssetServer>) {
     let pos = Vec3::new(0.0, 0.0, 0.0);
-    let scene_path = std::env::args()
-        .nth(1)
-        .unwrap_or_else(|| FLIGHT_HELMET.to_string());
+    let scene_path = {
+        let scene_path = std::env::args()
+            .nth(1)
+            .unwrap_or_else(|| FLIGHT_HELMET.to_string());
+
+        if !scene_path.contains("#Scene") {
+            format!("{}#Scene0", scene_path)
+        } else {
+            scene_path
+        }
+    };
 
     let scale = if scene_path == FLIGHT_HELMET {
         4.5
